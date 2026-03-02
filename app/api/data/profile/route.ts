@@ -1,24 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { sql } from '@/lib/db';
+import { getAuthenticatedSql } from '@/lib/db';
+import { extractAuthToken, getAuthUser } from '@/lib/auth-helpers';
 
 export async function GET(request: NextRequest) {
   try {
-    // User ID is attached by middleware
-    const userId = request.headers.get('x-user-id');
-    const userEmail = request.headers.get('x-user-email');
+    // Extract JWT token for Neon Authorize
+    const token = extractAuthToken(request);
+    const user = getAuthUser(request);
 
-    if (!userId) {
+    if (!user || !token) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
       );
     }
 
+    // Use authenticated SQL connection with JWT for Neon Authorize
+    const sql = getAuthenticatedSql(token);
+
     // Fetch user profile from database
+    // With Neon Authorize, row-level security policies can be applied
     const users = await sql`
       SELECT id, email, name, photo_url, created_at
       FROM users
-      WHERE id = ${userId}
+      WHERE id = ${user.id}
     `;
 
     if (users.length === 0) {
@@ -28,16 +33,16 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const user = users[0];
+    const userProfile = users[0];
 
     return NextResponse.json({
       success: true,
       data: {
-        id: user.id.toString(),
-        email: user.email,
-        name: user.name,
-        photo_url: user.photo_url,
-        created_at: user.created_at,
+        id: userProfile.id.toString(),
+        email: userProfile.email,
+        name: userProfile.name,
+        photo_url: userProfile.photo_url,
+        created_at: userProfile.created_at,
       },
     });
   } catch (error: any) {

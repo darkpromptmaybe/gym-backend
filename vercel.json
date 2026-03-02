@@ -7,8 +7,10 @@
     }
   ],
   "env": {
-    "DATABASE_URL": "postgresql://neondb_owner:npg_cjEik36XKuDb@ep-purple-salad-aiqdx9pg.c-4.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require",
+    "DATABASE_URL": "postgresql://neondb_owner:npg_cjEik36XKuDb@ep-purple-salad-aiqdx9pg-pooler.c-4.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require",
     "DATABASE_URL_UNPOOLED": "postgresql://neondb_owner:npg_cjEik36XKuDb@ep-purple-salad-aiqdx9pg.c-4.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require",
+    "NEON_AUTH_URL": "https://ep-purple-salad-aiqdx9pg.neonauth.c-4.us-east-1.aws.neon.tech/neondb/auth",
+    "JWKS_URL": "https://ep-purple-salad-aiqdx9pg.neonauth.c-4.us-east-1.aws.neon.tech/neondb/auth/.well-known/jwks.json",
     "NEXTAUTH_SECRET": "your-nextauth-secret-here",
     "BETTER_AUTH_SECRET": "your-better-auth-secret-here",
     "BETTER_AUTH_URL": "https://gym-backend-two-bay.vercel.app",
