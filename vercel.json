@@ -5,5 +5,24 @@
       "src": "package.json",
       "use": "@vercel/next"
     }
-    ]
+  ],
+  "env": {
+    "DATABASE_URL": "postgresql://user:password@localhost/gym",
+    "DATABASE_URL_UNPOOLED": "postgresql://user:password@localhost/gym",
+    "NEXTAUTH_SECRET": "your-nextauth-secret-here",
+    "BETTER_AUTH_SECRET": "your-better-auth-secret-here",
+    "BETTER_AUTH_URL": "http://localhost:3000",
+    "GOOGLE_CLIENT_ID": "your-google-client-id-here",
+    "GOOGLE_CLIENT_SECRET": "your-google-client-secret-here"
+  },
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
+  ]
 }
