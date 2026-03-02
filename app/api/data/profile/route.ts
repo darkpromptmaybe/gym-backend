@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getAuthenticatedSql } from '@/lib/db';
 import { extractAuthToken, getAuthUser } from '@/lib/auth-helpers';
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
   try {
     // Extract JWT token for Neon Authorize
