@@ -1,21 +1,24 @@
-import { neon, NeonQueryFunction } from '@neondatabase/serverless';
+import { neon, NeonQueryFunction, neonConfig } from '@neondatabase/serverless';
 
 if (!process.env.DATABASE_URL) {
   throw new Error('DATABASE_URL environment variable is not set');
 }
 
-// Create base SQL connection
+// Configure Neon to use fetch for connection pooling (shared client mode)
+neonConfig.fetchConnectionCache = true;
+
+// Create shared base SQL connection (reused across requests)
 export const sql = neon(process.env.DATABASE_URL);
 
 // Create authenticated SQL connection with JWT for Neon Authorize
-// Neon Authorize uses the JWT in the Authorization header when making queries
+// This uses a shared client with per-request JWT tokens
 export function getAuthenticatedSql(authToken?: string): NeonQueryFunction<false, false> {
   if (!authToken) {
     return sql;
   }
   
-  // For Neon Authorize, configure the connection with JWT
-  // The token will be passed via the neonConfig.fetchOptions
+  // For Neon Authorize with shared client: configure with JWT in Authorization header
+  // The shared client will reuse connections while injecting the JWT per request
   const authenticatedSql = neon(process.env.DATABASE_URL!, {
     fetchOptions: {
       headers: {
